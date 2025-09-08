@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Markdown } from "@/components/ui/markdown"; // Import the new Markdown component
 import {
   Send,
   Brain,
@@ -213,18 +214,26 @@ export default function AIChatPage() {
 
                   <div
                     className={cn(
-                      "max-w-[80%] rounded-lg px-4 py-2",
+                      "max-w-[80%] rounded-lg px-4 py-3",
                       message.role === "user"
                         ? "bg-primary text-primary-foreground ml-auto"
                         : "bg-muted"
                     )}
                   >
-                    <p className="text-sm">{message.content}</p>
+                    {/* Use Markdown component for AI responses, plain text for user messages */}
+                    {message.role === "assistant" ? (
+                      <Markdown
+                        content={message.content}
+                        className="prose-invert:text-primary-foreground"
+                      />
+                    ) : (
+                      <p className="text-sm">{message.content}</p>
+                    )}
 
                     {/* Show confidence score for AI responses */}
                     {message.role === "assistant" &&
                       message.confidenceScore && (
-                        <div className="mt-2 pt-2 border-t border-border/50">
+                        <div className="mt-3 pt-3 border-t border-border/50">
                           <div className="flex items-center space-x-2">
                             <Sparkles className="h-3 w-3" />
                             <span className="text-xs">
@@ -250,6 +259,7 @@ export default function AIChatPage() {
                                 variant="outline"
                                 size="sm"
                                 className="h-auto p-2 text-xs"
+                                onClick={() => setInput(action.label)}
                               >
                                 {action.label}
                               </Button>
@@ -258,7 +268,7 @@ export default function AIChatPage() {
                         </div>
                       )}
 
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="text-xs text-muted-foreground mt-3 pt-2 border-t border-border/30">
                       {message.timestamp.toLocaleTimeString()}
                     </p>
                   </div>
